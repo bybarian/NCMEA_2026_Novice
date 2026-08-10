@@ -1,0 +1,36 @@
+{
+  "entities": {
+    "Patient": {
+      "title": "Patient",
+      "description": "Hospital patient record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "gender": { "type": "string" },
+        "age": { "type": "string" },
+        "hidden": { "type": "boolean" }
+      },
+      "required": ["id", "name"]
+    },
+    "ExamState": {
+      "title": "ExamState",
+      "description": "System exam state management",
+      "type": "object",
+      "properties": {
+        "examTimerActive": { "type": "boolean" },
+        "durationSec": { "type": "number" }
+      }
+    }
+  },
+  "firestore": {
+    "/patients/{patientId}": {
+      "schema": { "$ref": "#/entities/Patient" },
+      "description": "Patient records collection"
+    },
+    "/system/{docId}": {
+      "schema": { "$ref": "#/entities/ExamState" },
+      "description": "System settings collection"
+    }
+  }
+}

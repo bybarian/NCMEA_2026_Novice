@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 900" width="100%" height="100%" style="background-color: #030712;">
+  <!-- Dark Radiography Canvas -->
+  <rect width="800" height="900" fill="#030712" />
+  
+  <defs>
+    <!-- Lung texture and blur filters -->
+    <filter id="soft-blur">
+      <feGaussianBlur stdDeviation="8" />
+    </filter>
+    <filter id="haze-blur">
+      <feGaussianBlur stdDeviation="15" />
+    </filter>
+    <radialGradient id="lung-grad-right" cx="40%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#1e293b" stop-opacity="0.9"/>
+      <stop offset="60%" stop-color="#0f172a" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#030712" stop-opacity="1"/>
+    </radialGradient>
+    <radialGradient id="lung-grad-left" cx="60%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#1e293b" stop-opacity="0.9"/>
+      <stop offset="60%" stop-color="#0f172a" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#030712" stop-opacity="1"/>
+    </radialGradient>
+    <linearGradient id="bone-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e2e8f0" stop-opacity="0.75"/>
+      <stop offset="100%" stop-color="#94a3b8" stop-opacity="0.4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- L35 Marker in Top Right Corner -->
+  <text x="730" y="70" fill="#f8fafc" font-family="Arial, sans-serif" font-size="36" font-weight="bold" letter-spacing="2" opacity="0.9">L35</text>
+
+  <!-- Soft Body Outline / Soft Tissues -->
+  <path d="M 200 120 C 120 180 80 320 70 500 C 60 680 110 820 160 900 L 640 900 C 690 820 740 680 730 500 C 720 320 680 180 600 120 Z" fill="#0f172a" opacity="0.4" filter="url(#haze-blur)" />
+
+  <!-- Thoracic Cage & Vertebral Column -->
+  <!-- Spine / Vertebrae -->
+  <line x1="400" y1="80" x2="400" y2="880" stroke="#cbd5e1" stroke-width="22" stroke-dasharray="28 10" opacity="0.45" />
+  <line x1="400" y1="80" x2="400" y2="880" stroke="#ffffff" stroke-width="12" stroke-dasharray="28 10" opacity="0.3" />
+
+  <!-- Clavicles (鎖骨) -->
+  <path d="M 400 130 Q 260 90 120 180" fill="none" stroke="url(#bone-grad)" stroke-width="20" stroke-linecap="round" filter="url(#soft-blur)" />
+  <path d="M 400 130 Q 260 90 120 180" fill="none" stroke="#f8fafc" stroke-width="12" stroke-linecap="round" opacity="0.7" />
+  
+  <path d="M 400 130 Q 540 90 680 180" fill="none" stroke="url(#bone-grad)" stroke-width="20" stroke-linecap="round" filter="url(#soft-blur)" />
+  <path d="M 400 130 Q 540 90 680 180" fill="none" stroke="#f8fafc" stroke-width="12" stroke-linecap="round" opacity="0.7" />
+
+  <!-- Ribs (肋骨雙側) -->
+  <g opacity="0.4" stroke="#e2e8f0" stroke-linecap="round" fill="none">
+    <path d="M 400 200 Q 220 220 150 320 Q 260 400 400 380" stroke-width="14" />
+    <path d="M 400 200 Q 580 220 650 320 Q 540 400 400 380" stroke-width="14" />
+
+    <path d="M 400 280 Q 180 310 130 430 Q 260 510 400 480" stroke-width="14" />
+    <path d="M 400 280 Q 620 310 670 430 Q 540 510 400 480" stroke-width="14" />
+
+    <path d="M 400 360 Q 160 410 120 540 Q 260 620 400 580" stroke-width="14" />
+    <path d="M 400 360 Q 640 410 680 540 Q 540 620 400 580" stroke-width="14" />
+
+    <path d="M 400 440 Q 150 510 120 650 Q 260 720 400 670" stroke-width="14" />
+    <path d="M 400 440 Q 650 510 680 650 Q 540 720 400 670" stroke-width="14" />
+  </g>
+
+  <!-- Lungs (Radiolucent dark zones) -->
+  <!-- Right Lung Field (Anatomical Right, Image Left) -->
+  <path d="M 380 160 C 240 140 150 250 140 580 C 220 660 320 650 380 620 Z" fill="url(#lung-grad-right)" />
+  <!-- Left Lung Field (Anatomical Left, Image Right) -->
+  <path d="M 420 160 C 560 140 650 250 660 580 C 580 660 480 650 420 620 Z" fill="url(#lung-grad-left)" />
+
+  <!-- Mediastinum & Cardiac Silhouette (心臟與縱隔陰影) -->
+  <path d="M 380 200 Q 430 300 470 420 Q 510 560 380 620 Q 330 600 360 400 Z" fill="#cbd5e1" opacity="0.45" filter="url(#soft-blur)" />
+  <path d="M 380 200 Q 430 300 470 420 Q 510 560 380 620 Q 330 600 360 400 Z" fill="#f8fafc" opacity="0.3" />
+
+  <!-- Diaphragm domes (橫膈膜) -->
+  <path d="M 120 620 Q 260 540 390 600 L 390 700 L 120 700 Z" fill="#334155" opacity="0.8" filter="url(#soft-blur)" />
+  <path d="M 120 620 Q 260 540 390 600" fill="none" stroke="#f1f5f9" stroke-width="6" opacity="0.7" />
+
+  <path d="M 410 600 Q 540 560 680 640 L 680 720 L 410 720 Z" fill="#334155" opacity="0.8" filter="url(#soft-blur)" />
+  <path d="M 410 600 Q 540 560 680 640" fill="none" stroke="#f1f5f9" stroke-width="6" opacity="0.7" />
+
+  <!-- Trachea (氣管透亮陰影) -->
+  <rect x="388" y="90" width="24" height="180" rx="4" fill="#030712" stroke="#cbd5e1" stroke-width="1.5" opacity="0.6" />
+
+  <!-- Mild Hilar & Vascular Markings (肺門血管紋理) -->
+  <g opacity="0.35" stroke="#f1f5f9" stroke-width="3" fill="none" filter="url(#soft-blur)">
+    <path d="M 370 320 Q 300 300 240 280 M 370 320 Q 280 360 220 400 M 370 320 Q 310 420 260 480" />
+    <path d="M 430 320 Q 500 300 560 280 M 430 320 Q 520 360 580 400 M 430 320 Q 490 420 540 480" />
+  </g>
+
+  <!-- 1. TRACHEOSTOMY TUBE (氣管切開套管 / 特殊管路) -->
+  <g id="tracheostomy-tube">
+    <!-- Outer Flange / Button at Neck -->
+    <rect x="365" y="115" width="70" height="22" rx="6" fill="#f8fafc" stroke="#38bdf8" stroke-width="2" opacity="0.95" />
+    <rect x="382" y="110" width="36" height="12" rx="3" fill="#e2e8f0" stroke="#0284c7" stroke-width="1.5" />
+    <!-- Curved Trach Tube extending into trachea -->
+    <path d="M 400 125 C 400 160 396 200 396 230" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" />
+    <path d="M 400 125 C 400 160 396 200 396 230" fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" />
+  </g>
+
+  <!-- 2. NASOGASTRIC TUBE (NG Tube / 鼻胃管) -->
+  <g id="ng-tube">
+    <!-- Radiopaque line passing down esophagus and trachea down to stomach -->
+    <path d="M 412 80 L 412 360 Q 412 520 416 610 Q 420 670 480 730 Q 540 780 500 810 Q 440 820 410 770" fill="none" stroke="#f8fafc" stroke-width="4.5" filter="url(#soft-blur)" />
+    <path d="M 412 80 L 412 360 Q 412 520 416 610 Q 420 670 480 730 Q 540 780 500 810 Q 440 820 410 770" fill="none" stroke="#ffffff" stroke-width="2.5" />
+    <!-- NG Tube Radiopaque side holes / metal tip marker -->
+    <path d="M 410 770 L 420 760" stroke="#000" stroke-width="2" />
+  </g>
+
+  <!-- Stomach Gas Bubble (胃泡) -->
+  <ellipse cx="480" cy="740" rx="60" ry="35" fill="#030712" stroke="#64748b" stroke-width="2" opacity="0.8" />
+</svg>

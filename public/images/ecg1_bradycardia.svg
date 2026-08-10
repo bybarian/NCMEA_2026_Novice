@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 540" width="100%" height="100%" style="background-color: #fff0f3;">
+  <defs>
+    <!-- Pink ECG Grid Patterns -->
+    <pattern id="ecg-small-grid" width="10" height="10" patternUnits="userSpaceOnUse">
+      <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#fca5a5" stroke-width="0.5" opacity="0.5" />
+    </pattern>
+    <pattern id="ecg-large-grid" width="50" height="50" patternUnits="userSpaceOnUse">
+      <rect width="50" height="50" fill="url(#ecg-small-grid)" />
+      <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#f87171" stroke-width="1.2" opacity="0.75" />
+    </pattern>
+  </defs>
+
+  <!-- ECG Grid Paper Background -->
+  <rect width="1000" height="540" fill="#fff5f5" />
+  <rect width="1000" height="540" fill="url(#ecg-large-grid)" />
+
+  <!-- Lead Labels -->
+  <g font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="bold" fill="#0f172a">
+    <!-- Row 1 -->
+    <text x="35" y="40">I</text>
+    <text x="270" y="40">aVR</text>
+    <text x="510" y="40">V1</text>
+    <text x="750" y="40">V4</text>
+
+    <!-- Row 2 -->
+    <text x="35" y="160">II</text>
+    <text x="270" y="160">aVL</text>
+    <text x="510" y="160">V2</text>
+    <text x="750" y="160">V5</text>
+
+    <!-- Row 3 -->
+    <text x="35" y="280">III</text>
+    <text x="270" y="280">aVF</text>
+    <text x="510" y="280">V3</text>
+    <text x="750" y="280">V6</text>
+
+    <!-- Bottom Rhythm Strip -->
+    <text x="35" y="420">II</text>
+    <text x="60" y="420" font-size="12" font-weight="normal" fill="#475569">Rhythm strip  10 mm/mV</text>
+  </g>
+
+  <!-- Standard Calibration Pulse |¯| (10 mm/mV) on far left -->
+  <path d="M 15 100 L 15 70 L 30 70 L 30 100 L 35 100" fill="none" stroke="#1e293b" stroke-width="2" />
+  <path d="M 15 220 L 15 190 L 30 190 L 30 220 L 35 220" fill="none" stroke="#1e293b" stroke-width="2" />
+  <path d="M 15 340 L 15 310 L 30 310 L 30 340 L 35 340" fill="none" stroke="#1e293b" stroke-width="2" />
+  <path d="M 15 460 L 15 430 L 30 430 L 30 460 L 35 460" fill="none" stroke="#1e293b" stroke-width="2" />
+
+  <!-- ECG WAVEFORMS (Dark charcoal lines) -->
+  <g fill="none" stroke="#0f172a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <!-- ROW 1: I, aVR, V1, V4 -->
+    <!-- Lead I -->
+    <path d="M 45 80 L 70 80 Q 75 75 80 80 L 90 80 L 93 85 L 97 50 L 102 95 L 105 80 L 120 80 Q 130 70 140 80 L 180 80 Q 185 75 190 80 L 200 80 L 203 85 L 207 50 L 212 95 L 215 80 L 230 80" />
+    
+    <!-- Lead aVR -->
+    <path d="M 285 80 L 310 80 Q 315 85 320 80 L 330 80 L 333 75 L 337 110 L 342 65 L 345 80 L 360 80 Q 370 90 380 80 L 420 80 Q 425 85 430 80 L 440 80 L 443 75 L 447 110 L 452 65 L 455 80 L 470 80" />
+
+    <!-- Lead V1 -->
+    <path d="M 525 80 L 550 80 Q 555 83 560 80 L 570 80 L 573 85 L 577 115 L 582 60 L 585 80 L 600 80 Q 610 88 620 80 L 660 80 Q 665 83 670 80 L 680 80 L 683 85 L 687 115 L 692 60 L 695 80 L 710 80" />
+
+    <!-- Lead V4 -->
+    <path d="M 765 80 L 790 80 Q 795 73 800 80 L 810 80 L 813 85 L 817 35 L 822 100 L 825 80 L 840 80 Q 850 68 860 80 L 900 80 Q 905 73 910 80 L 920 80 L 923 85 L 927 35 L 932 100 L 935 80 L 950 80" />
+
+    <!-- ROW 2: II, aVL, V2, V5 -->
+    <!-- Lead II -->
+    <path d="M 45 200 L 70 200 Q 75 190 80 200 L 90 200 L 93 205 L 97 150 L 102 215 L 105 200 L 120 200 Q 130 185 140 200 L 180 200 Q 185 190 190 200 L 200 200 L 203 205 L 207 150 L 212 215 L 215 200 L 230 200" />
+
+    <!-- Lead aVL -->
+    <path d="M 285 200 L 310 200 Q 315 195 320 200 L 330 200 L 333 205 L 337 175 L 342 210 L 345 200 L 360 200 Q 370 190 380 200 L 420 200 Q 425 195 430 200 L 440 200 L 443 205 L 447 175 L 452 210 L 455 200 L 470 200" />
+
+    <!-- Lead V2 -->
+    <path d="M 525 200 L 550 200 Q 555 193 560 200 L 570 200 L 573 205 L 577 135 L 582 230 L 585 200 L 600 200 Q 610 215 620 200 L 660 200 Q 665 193 670 200 L 680 200 L 683 205 L 687 135 L 692 230 L 695 200 L 710 200" />
+
+    <!-- Lead V5 -->
+    <path d="M 765 200 L 790 200 Q 795 190 800 200 L 810 200 L 813 205 L 817 155 L 822 215 L 825 200 L 840 200 Q 850 188 860 200 L 900 200 Q 905 190 910 200 L 920 200 L 923 205 L 927 155 L 932 215 L 935 200 L 950 200" />
+
+    <!-- ROW 3: III, aVF, V3, V6 -->
+    <!-- Lead III -->
+    <path d="M 45 320 L 70 320 Q 75 315 80 320 L 90 320 L 93 325 L 97 285 L 102 335 L 105 320 L 120 320 Q 130 310 140 320 L 180 320 Q 185 315 190 320 L 200 320 L 203 325 L 207 285 L 212 335 L 215 320 L 230 320" />
+
+    <!-- Lead aVF -->
+    <path d="M 285 320 L 310 320 Q 315 312 320 320 L 330 320 L 333 325 L 337 275 L 342 335 L 345 320 L 360 320 Q 370 310 380 320 L 420 320 Q 425 312 430 320 L 440 320 L 443 325 L 447 275 L 452 335 L 455 320 L 470 320" />
+
+    <!-- Lead V3 -->
+    <path d="M 525 320 L 550 320 Q 555 312 560 320 L 570 320 L 573 325 L 577 255 L 582 355 L 585 320 L 600 320 Q 610 335 620 320 L 660 320 Q 665 312 670 320 L 680 320 L 683 325 L 687 255 L 692 355 L 695 320 L 710 320" />
+
+    <!-- Lead V6 -->
+    <path d="M 765 320 L 790 320 Q 795 312 800 320 L 810 320 L 813 325 L 817 280 L 822 335 L 825 320 L 840 320 Q 850 310 860 320 L 900 320 Q 905 312 910 320 L 920 320 L 923 325 L 927 280 L 932 335 L 935 320 L 950 320" />
+
+    <!-- ROW 4: BOTTOM LEAD II RHYTHM STRIP (Full width) -->
+    <path d="M 45 440 L 90 440 Q 95 430 100 440 L 110 440 L 113 445 L 117 390 L 122 455 L 125 440 L 140 440 Q 150 425 160 440 
+             L 260 440 Q 265 430 270 440 L 280 440 L 283 445 L 287 390 L 292 455 L 295 440 L 310 440 Q 320 425 330 440 
+             L 430 440 Q 435 430 440 440 L 450 440 L 453 445 L 457 390 L 462 455 L 465 440 L 480 440 Q 490 425 500 440 
+             L 600 440 Q 605 430 610 440 L 620 440 L 623 445 L 627 390 L 632 455 L 635 440 L 650 440 Q 660 425 670 440 
+             L 770 440 Q 775 430 780 440 L 790 440 L 793 445 L 797 390 L 802 455 L 805 440 L 820 440 Q 830 425 840 440 
+             L 950 440" />
+  </g>
+</svg>

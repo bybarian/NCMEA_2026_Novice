@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 540" width="100%" height="100%" style="background-color: #fff0f3;">
+  <defs>
+    <pattern id="ecg-small-grid" width="10" height="10" patternUnits="userSpaceOnUse">
+      <path d="M 10 0 L 0 0 0 10" fill="none" stroke="#fca5a5" stroke-width="0.5" opacity="0.5" />
+    </pattern>
+    <pattern id="ecg-large-grid" width="50" height="50" patternUnits="userSpaceOnUse">
+      <rect width="50" height="50" fill="url(#ecg-small-grid)" />
+      <path d="M 50 0 L 0 0 0 50" fill="none" stroke="#f87171" stroke-width="1.2" opacity="0.75" />
+    </pattern>
+  </defs>
+
+  <!-- ECG Grid Paper Background -->
+  <rect width="1000" height="540" fill="#fff5f5" />
+  <rect width="1000" height="540" fill="url(#ecg-large-grid)" />
+
+  <!-- Lead Labels -->
+  <g font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="bold" fill="#0f172a">
+    <text x="35" y="40">I</text>
+    <text x="270" y="40">aVR</text>
+    <text x="510" y="40">V1</text>
+    <text x="750" y="40">V4</text>
+
+    <text x="35" y="160">II</text>
+    <text x="270" y="160">aVL</text>
+    <text x="510" y="160">V2</text>
+    <text x="750" y="160">V5</text>
+
+    <text x="35" y="280">III</text>
+    <text x="270" y="280">aVF</text>
+    <text x="510" y="280">V3</text>
+    <text x="750" y="280">V6</text>
+
+    <text x="35" y="420">II</text>
+    <text x="60" y="420" font-size="12" font-weight="normal" fill="#475569">Rhythm strip  10 mm/mV (Rapid Ventricular Rate / Tachycardia)</text>
+  </g>
+
+  <!-- Standard Calibration Pulses -->
+  <path d="M 15 100 L 15 70 L 30 70 L 30 100 L 35 100" fill="none" stroke="#1e293b" stroke-width="2" />
+  <path d="M 15 220 L 15 190 L 30 190 L 30 220 L 35 220" fill="none" stroke="#1e293b" stroke-width="2" />
+  <path d="M 15 340 L 15 310 L 30 310 L 30 340 L 35 340" fill="none" stroke="#1e293b" stroke-width="2" />
+  <path d="M 15 460 L 15 430 L 30 430 L 30 460 L 35 460" fill="none" stroke="#1e293b" stroke-width="2" />
+
+  <!-- TACHYCARDIAC / AFIB WAVEFORMS (Fast QRS intervals, ~120-130 bpm) -->
+  <g fill="none" stroke="#0f172a" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <!-- ROW 1 -->
+    <path d="M 45 80 L 60 80 L 63 84 L 67 45 L 71 90 L 73 80 L 85 80 
+             L 110 80 L 113 84 L 117 45 L 121 90 L 123 80 L 135 80 
+             L 160 80 L 163 84 L 167 45 L 171 90 L 173 80 L 185 80 
+             L 210 80 L 213 84 L 217 45 L 221 90 L 223 80 L 235 80" />
+
+    <path d="M 285 80 L 300 80 L 303 76 L 307 105 L 311 65 L 313 80 L 325 80 
+             L 350 80 L 353 76 L 357 105 L 361 65 L 363 80 L 375 80 
+             L 400 80 L 403 76 L 407 105 L 411 65 L 413 80 L 425 80 
+             L 450 80 L 453 76 L 457 105 L 461 65 L 463 80 L 475 80" />
+
+    <path d="M 525 80 L 540 80 L 543 84 L 547 115 L 551 60 L 553 80 L 565 80 
+             L 590 80 L 593 84 L 597 115 L 601 60 L 603 80 L 615 80 
+             L 640 80 L 643 84 L 647 115 L 651 60 L 653 80 L 665 80 
+             L 690 80 L 693 84 L 697 115 L 701 60 L 703 80 L 715 80" />
+
+    <path d="M 765 80 L 780 80 L 783 84 L 787 30 L 791 100 L 793 80 L 805 80 
+             L 830 80 L 833 84 L 837 30 L 841 100 L 843 80 L 855 80 
+             L 880 80 L 883 84 L 887 30 L 891 100 L 893 80 L 905 80 
+             L 930 80 L 933 84 L 937 30 L 941 100 L 943 80 L 955 80" />
+
+    <!-- ROW 2 -->
+    <path d="M 45 200 L 60 200 L 63 204 L 67 145 L 71 210 L 73 200 L 85 200 
+             L 110 200 L 113 204 L 117 145 L 121 210 L 123 200 L 135 200 
+             L 160 200 L 163 204 L 167 145 L 171 210 L 173 200 L 185 200 
+             L 210 200 L 213 204 L 217 145 L 221 210 L 223 200 L 235 200" />
+
+    <path d="M 285 200 L 300 200 L 303 204 L 307 170 L 311 215 L 313 200 L 325 200 
+             L 350 200 L 353 204 L 357 170 L 361 215 L 363 200 L 375 200 
+             L 400 200 L 403 204 L 407 170 L 411 215 L 413 200 L 425 200 
+             L 450 200 L 453 204 L 457 170 L 461 215 L 463 200 L 475 200" />
+
+    <path d="M 525 200 L 540 200 L 543 204 L 547 130 L 551 225 L 553 200 L 565 200 
+             L 590 200 L 593 204 L 597 130 L 601 225 L 603 200 L 615 200 
+             L 640 200 L 643 204 L 647 130 L 651 225 L 653 200 L 665 200 
+             L 690 200 L 693 204 L 697 130 L 701 225 L 703 200 L 715 200" />
+
+    <path d="M 765 200 L 780 200 L 783 204 L 787 145 L 791 215 L 793 200 L 805 200 
+             L 830 200 L 833 204 L 837 145 L 841 215 L 843 200 L 855 200 
+             L 880 200 L 883 204 L 887 145 L 891 215 L 893 200 L 905 200 
+             L 930 200 L 933 204 L 937 145 L 941 215 L 943 200 L 955 200" />
+
+    <!-- ROW 3 -->
+    <path d="M 45 320 L 60 320 L 63 324 L 67 275 L 71 330 L 73 320 L 85 320 
+             L 110 320 L 113 324 L 117 275 L 121 330 L 123 320 L 135 320 
+             L 160 320 L 163 324 L 167 275 L 171 330 L 173 320 L 185 320 
+             L 210 320 L 213 324 L 217 275 L 221 330 L 223 320 L 235 320" />
+
+    <path d="M 285 320 L 300 320 L 303 324 L 307 270 L 311 330 L 313 320 L 325 320 
+             L 350 320 L 353 324 L 357 270 L 361 330 L 363 320 L 375 320 
+             L 400 320 L 403 324 L 407 270 L 411 330 L 413 320 L 425 320 
+             L 450 320 L 453 324 L 457 270 L 461 330 L 463 320 L 475 320" />
+
+    <path d="M 525 320 L 540 320 L 543 324 L 547 250 L 551 345 L 553 320 L 565 320 
+             L 590 320 L 593 324 L 597 250 L 601 345 L 603 320 L 615 320 
+             L 640 320 L 643 324 L 647 250 L 651 345 L 653 320 L 665 320 
+             L 690 320 L 693 324 L 697 250 L 701 345 L 703 320 L 715 320" />
+
+    <path d="M 765 320 L 780 320 L 783 324 L 787 275 L 791 330 L 793 320 L 805 320 
+             L 830 320 L 833 324 L 837 275 L 841 330 L 843 320 L 855 320 
+             L 880 320 L 883 324 L 887 275 L 891 330 L 893 320 L 905 320 
+             L 930 320 L 933 324 L 937 275 L 941 330 L 943 320 L 955 320" />
+
+    <!-- ROW 4: BOTTOM RHYTHM STRIP -->
+    <path d="M 45 440 L 70 440 L 73 444 L 77 385 L 81 450 L 83 440 L 95 440
+             L 120 440 L 123 444 L 127 385 L 131 450 L 133 440 L 145 440
+             L 175 440 L 178 444 L 182 385 L 186 450 L 188 440 L 200 440
+             L 230 440 L 233 444 L 237 385 L 241 450 L 243 440 L 255 440
+             L 280 440 L 283 444 L 287 385 L 291 450 L 293 440 L 305 440
+             L 335 440 L 338 444 L 342 385 L 346 450 L 348 440 L 360 440
+             L 390 440 L 393 444 L 397 385 L 401 450 L 403 440 L 415 440
+             L 440 440 L 443 444 L 447 385 L 451 450 L 453 440 L 465 440
+             L 495 440 L 498 444 L 502 385 L 506 450 L 508 440 L 520 440
+             L 550 440 L 553 444 L 557 385 L 561 450 L 563 440 L 575 440
+             L 600 440 L 603 444 L 607 385 L 611 450 L 613 440 L 625 440
+             L 655 440 L 658 444 L 662 385 L 666 450 L 668 440 L 680 440
+             L 710 440 L 713 444 L 717 385 L 721 450 L 723 440 L 735 440
+             L 765 440 L 768 444 L 772 385 L 776 450 L 778 440 L 790 440
+             L 820 440 L 823 444 L 827 385 L 831 450 L 833 440 L 845 440
+             L 875 440 L 878 444 L 882 385 L 886 450 L 888 440 L 900 440
+             L 930 440 L 933 444 L 937 385 L 941 450 L 943 440 L 955 440" />
+  </g>
+</svg>

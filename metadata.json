@@ -1,0 +1,6 @@
+{
+  "name": "泰萬綜合醫院醫療資訊系統",
+  "description": "A comprehensive simulation of a clinical Hospital Information System for medical students to manage patients, view medical summaries, upload imaging/lab data, and practice clinical orders with timed results.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
