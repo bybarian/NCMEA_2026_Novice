@@ -12,6 +12,7 @@ import { LabResultsSection } from './components/LabResultsSection';
 import { CPOEOrderPractice } from './components/CPOEOrderPractice';
 import { EcgSection } from './components/EcgSection';
 import { UltrasoundSection } from './components/UltrasoundSection';
+import { AdminBackstageModal } from './components/AdminBackstageModal';
 import { 
   seedDefaultPatientsIfEmpty, 
   savePatientToFirestore, 
@@ -23,7 +24,7 @@ import {
 import { 
   Building2, Users, ShoppingBag, BellRing, Clock, ShieldAlert,
   ChevronRight, ArrowRight, Pill, Microscope, FileText, Image as ImageIcon, ShoppingCart, X, User, Monitor, Trash2, RotateCcw,
-  Activity, Video, Lock, Key, LogOut
+  Activity, Video, Lock, Key, LogOut, Upload
 } from 'lucide-react';
 
 interface ToastItemProps {
@@ -165,6 +166,7 @@ export default function App() {
   const [examLog, setExamLog] = useState<{ id: string; timestamp: string; timerTime: string; patientName: string; action: string }[]>([]);
   const [showLogModal, setShowLogModal] = useState<boolean>(false);
   const [showBloodDrawAlertModal, setShowBloodDrawAlertModal] = useState<boolean>(false);
+  const [showAdminModal, setShowAdminModal] = useState<boolean>(false);
 
   // Synchronous ref to prevent stale React state closures from accidentally turning timer back on
   const examStateRef = useRef({
@@ -475,20 +477,28 @@ export default function App() {
   // Sync patients changes to LocalStorage & Firestore (Bidirectional Sync)
   useEffect(() => {
     // 1. Keep standard local storage as cache / offline fallback
-    localStorage.setItem('vhis_patients_data', JSON.stringify(patients));
+    try {
+      localStorage.setItem('vhis_patients_data', JSON.stringify(patients));
+    } catch (err) {
+      console.warn('LocalStorage quota notice (app remains fully functional in memory):', err);
+    }
 
     // 2. Synchronize individual patients that were modified locally to Firestore
     patients.forEach((patient) => {
-      const patientJson = JSON.stringify(patient);
-      const lastSyncedJson = lastSyncedPatientsRef.current[patient.id];
-      
-      if (lastSyncedJson !== undefined && patientJson !== lastSyncedJson) {
-        // Local state has diverged! Push to cloud database
-        lastSyncedPatientsRef.current[patient.id] = patientJson;
-        savePatientToFirestore(patient);
-      } else if (lastSyncedJson === undefined) {
-        // Cache initial reference without sending redundant firestore updates
-        lastSyncedPatientsRef.current[patient.id] = patientJson;
+      try {
+        const patientJson = JSON.stringify(patient);
+        const lastSyncedJson = lastSyncedPatientsRef.current[patient.id];
+        
+        if (lastSyncedJson !== undefined && patientJson !== lastSyncedJson) {
+          // Local state has diverged! Push to cloud database
+          lastSyncedPatientsRef.current[patient.id] = patientJson;
+          savePatientToFirestore(patient);
+        } else if (lastSyncedJson === undefined) {
+          // Cache initial reference without sending redundant firestore updates
+          lastSyncedPatientsRef.current[patient.id] = patientJson;
+        }
+      } catch (err) {
+        console.warn(`Patient sync notice for ${patient.id}:`, err);
       }
     });
   }, [patients]);
@@ -1618,6 +1628,18 @@ export default function App() {
                 登出
               </button>
             </div>
+
+            {/* Backstage Upload Admin Panel Button */}
+            <button
+              type="button"
+              onClick={() => setShowAdminModal(true)}
+              className="bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold px-3 py-1 rounded-lg text-xs flex items-center gap-1.5 shadow-sm transition-all cursor-pointer font-sans border border-amber-300 active:scale-95"
+              title="開啟教研考官後台，可上傳影像、心電圖與超音波"
+            >
+              <Upload className="w-3.5 h-3.5 text-slate-950" />
+              <span className="hidden sm:inline">後台影像與報告上傳</span>
+              <span className="sm:hidden">後台</span>
+            </button>
           </div>
         </header>
 
@@ -2182,6 +2204,16 @@ export default function App() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Admin Backstage Upload Modal */}
+      {showAdminModal && (
+        <AdminBackstageModal
+          patients={patients}
+          activePatientId={activePatientId}
+          onClose={() => setShowAdminModal(false)}
+          onUpdatePatient={handleUpdatePatient}
+        />
       )}
     </div>
   );

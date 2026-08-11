@@ -44,11 +44,11 @@ export const DiagnosesSection: React.FC<DiagnosesSectionProps> = ({ patient }) =
               <span className="font-mono font-bold text-[#00824F] text-xs bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-150">{patient.chartNumber}</span>
             </div>
             <div>
-              <span className="text-slate-450 block font-semibold">生理性別：</span>
-              <span className="font-semibold text-slate-700">{patient.gender === 'M' ? '女性（實際登記：男、病案林建國）' : patient.gender === 'F' ? '女性' : '其他'}</span>
+              <span className="text-slate-450 block font-semibold">性別：</span>
+              <span className="font-semibold text-slate-700">{patient.gender === 'M' ? '男' : patient.gender === 'F' ? '女' : '其他'}</span>
             </div>
             <div>
-              <span className="text-slate-450 block font-semibold">實足年齡：</span>
+              <span className="text-slate-450 block font-semibold">年齡：</span>
               <span className="font-bold text-slate-800">{patient.age} 歲</span>
             </div>
             <div>
