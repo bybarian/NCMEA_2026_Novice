@@ -3,6 +3,7 @@ import { Patient, UltrasoundReport } from '../types';
 import { Video, Calendar, Eye, ZoomIn, ZoomOut, AlertCircle, Play, Pause } from 'lucide-react';
 import { UltrasoundDrawing } from './MedicalDrawings';
 import { InteractiveImageViewer } from './InteractiveImageViewer';
+import { SmartMedicalImage, resolveAssetUrl } from '../utils/assetHelper';
 
 interface UltrasoundSectionProps {
   patient: Patient | null;
@@ -182,7 +183,7 @@ export function UltrasoundSection({ patient }: UltrasoundSectionProps) {
                     <div className="relative rounded overflow-hidden border border-slate-800 shadow-md">
                       <video
                         key={selectedUltra.id} // Re-mount video on report switch
-                        src={selectedUltra.imageUrl}
+                        src={resolveAssetUrl(selectedUltra.imageUrl)}
                         controls
                         loop
                         autoPlay
@@ -194,13 +195,12 @@ export function UltrasoundSection({ patient }: UltrasoundSectionProps) {
                         }}
                       />
                     </div>
-                  ) : (!failedUltraUrls[selectedUltra.imageUrl] && (selectedUltra.imageUrl.startsWith('http') || selectedUltra.imageUrl.startsWith('data:') || selectedUltra.imageUrl.startsWith('/') || selectedUltra.imageUrl.startsWith('./'))) ? (
-                    <img
-                      src={selectedUltra.imageUrl}
+                  ) : (!failedUltraUrls[selectedUltra.imageUrl] && (selectedUltra.imageUrl.startsWith('http') || selectedUltra.imageUrl.startsWith('data:') || selectedUltra.imageUrl.startsWith('/') || selectedUltra.imageUrl.startsWith('./') || selectedUltra.imageUrl.includes('.'))) ? (
+                    <SmartMedicalImage
+                      rawSrc={selectedUltra.imageUrl}
                       alt="Ultrasound Scan"
-                      referrerPolicy="no-referrer"
                       className="rounded border border-slate-800 shadow-md max-h-[480px] object-contain"
-                      onError={() => {
+                      onAllFailed={() => {
                         setFailedUltraUrls(prev => ({ ...prev, [selectedUltra.imageUrl]: true }));
                       }}
                     />

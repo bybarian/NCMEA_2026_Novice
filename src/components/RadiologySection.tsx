@@ -3,6 +3,7 @@ import { Patient, ImagingStudy } from '../types';
 import { Image as ImageIcon, Calendar, FileText, LayoutGrid, Eye, Search } from 'lucide-react';
 import { ChestXrayDrawing, AbdominalCtDrawing, BrainCtDrawing, UltrasoundDrawing, PlaceholderDrawing } from './MedicalDrawings';
 import { InteractiveImageViewer } from './InteractiveImageViewer';
+import { SmartMedicalImage } from '../utils/assetHelper';
 
 interface RadiologySectionProps {
   patient: Patient;
@@ -124,12 +125,11 @@ export const RadiologySection: React.FC<RadiologySectionProps> = ({ patient, cli
 
     return (
       <div className="w-full h-80 bg-slate-950 flex items-center justify-center rounded-lg overflow-hidden border border-slate-800">
-        <img 
-          src={imgUrl} 
+        <SmartMedicalImage 
+          rawSrc={imgUrl} 
           alt="Radiology imaging study" 
           className="max-w-full max-h-full object-contain" 
-          referrerPolicy="no-referrer"
-          onError={() => {
+          onAllFailed={() => {
             setFailedImageUrls(prev => ({ ...prev, [imgUrl]: true }));
           }}
         />

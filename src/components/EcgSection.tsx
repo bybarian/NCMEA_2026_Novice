@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Patient, EcgReport } from '../types';
 import { Activity, Calendar, Eye, ZoomIn, ZoomOut, AlertCircle } from 'lucide-react';
 import { InteractiveImageViewer } from './InteractiveImageViewer';
+import { SmartMedicalImage } from '../utils/assetHelper';
 
 interface EcgSectionProps {
   patient: Patient | null;
@@ -160,13 +161,12 @@ export function EcgSection({ patient }: EcgSectionProps) {
                   dateStr={selectedEcg.dateTime.replace('T', ' ')}
                   minHeight="min-h-[360px]"
                 >
-                  {((selectedEcg.imageUrl.startsWith('http') || selectedEcg.imageUrl.startsWith('data:') || selectedEcg.imageUrl.startsWith('/') || selectedEcg.imageUrl.startsWith('./')) && !failedEcgUrls[selectedEcg.imageUrl]) ? (
-                    <img
-                      src={selectedEcg.imageUrl}
+                  {((selectedEcg.imageUrl.startsWith('http') || selectedEcg.imageUrl.startsWith('data:') || selectedEcg.imageUrl.startsWith('/') || selectedEcg.imageUrl.startsWith('./') || selectedEcg.imageUrl.includes('.')) && !failedEcgUrls[selectedEcg.imageUrl]) ? (
+                    <SmartMedicalImage
+                      rawSrc={selectedEcg.imageUrl}
                       alt="ECG Waveform"
-                      referrerPolicy="no-referrer"
                       className="rounded border border-slate-800 shadow-md max-h-[500px] object-contain"
-                      onError={() => {
+                      onAllFailed={() => {
                         setFailedEcgUrls(prev => ({ ...prev, [selectedEcg.imageUrl]: true }));
                       }}
                     />

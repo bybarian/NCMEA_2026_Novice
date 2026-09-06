@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 900" width="100%" height="100%" style="background-color: #030712;">
+  <!-- Dark Radiography Canvas -->
+  <rect width="800" height="900" fill="#030712" />
+  
+  <defs>
+    <filter id="soft-blur">
+      <feGaussianBlur stdDeviation="8" />
+    </filter>
+    <filter id="heavy-blur">
+      <feGaussianBlur stdDeviation="16" />
+    </filter>
+    <filter id="consolidation-blur">
+      <feGaussianBlur stdDeviation="22" />
+    </filter>
+    <radialGradient id="lung-grad-right" cx="40%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#1e293b" stop-opacity="0.9"/>
+      <stop offset="60%" stop-color="#0f172a" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#030712" stop-opacity="1"/>
+    </radialGradient>
+    <radialGradient id="lung-grad-left" cx="60%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#1e293b" stop-opacity="0.9"/>
+      <stop offset="60%" stop-color="#0f172a" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#030712" stop-opacity="1"/>
+    </radialGradient>
+    <linearGradient id="bone-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#e2e8f0" stop-opacity="0.75"/>
+      <stop offset="100%" stop-color="#94a3b8" stop-opacity="0.4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- L35 Marker in Top Right Corner -->
+  <text x="730" y="70" fill="#f8fafc" font-family="Arial, sans-serif" font-size="36" font-weight="bold" letter-spacing="2" opacity="0.9">L35</text>
+
+  <!-- Thoracic Cage & Spine -->
+  <line x1="400" y1="80" x2="400" y2="880" stroke="#cbd5e1" stroke-width="22" stroke-dasharray="28 10" opacity="0.45" />
+  <line x1="400" y1="80" x2="400" y2="880" stroke="#ffffff" stroke-width="12" stroke-dasharray="28 10" opacity="0.3" />
+
+  <!-- Clavicles -->
+  <path d="M 400 130 Q 260 90 120 180" fill="none" stroke="url(#bone-grad)" stroke-width="20" stroke-linecap="round" filter="url(#soft-blur)" />
+  <path d="M 400 130 Q 260 90 120 180" fill="none" stroke="#f8fafc" stroke-width="12" stroke-linecap="round" opacity="0.7" />
+  
+  <path d="M 400 130 Q 540 90 680 180" fill="none" stroke="url(#bone-grad)" stroke-width="20" stroke-linecap="round" filter="url(#soft-blur)" />
+  <path d="M 400 130 Q 540 90 680 180" fill="none" stroke="#f8fafc" stroke-width="12" stroke-linecap="round" opacity="0.7" />
+
+  <!-- Ribs -->
+  <g opacity="0.35" stroke="#e2e8f0" stroke-linecap="round" fill="none">
+    <path d="M 400 200 Q 220 220 150 320 Q 260 400 400 380" stroke-width="14" />
+    <path d="M 400 200 Q 580 220 650 320 Q 540 400 400 380" stroke-width="14" />
+    <path d="M 400 280 Q 180 310 130 430 Q 260 510 400 480" stroke-width="14" />
+    <path d="M 400 280 Q 620 310 670 430 Q 540 510 400 480" stroke-width="14" />
+    <path d="M 400 360 Q 160 410 120 540 Q 260 620 400 580" stroke-width="14" />
+    <path d="M 400 360 Q 640 410 680 540 Q 540 620 400 580" stroke-width="14" />
+    <path d="M 400 440 Q 150 510 120 650 Q 260 720 400 670" stroke-width="14" />
+    <path d="M 400 440 Q 650 510 680 650 Q 540 720 400 670" stroke-width="14" />
+  </g>
+
+  <!-- Lungs -->
+  <path d="M 380 160 C 240 140 150 250 140 580 C 220 660 320 650 380 620 Z" fill="url(#lung-grad-right)" />
+  <path d="M 420 160 C 560 140 650 250 660 580 C 580 660 480 650 420 620 Z" fill="url(#lung-grad-left)" />
+
+  <!-- DENSE BILATERAL INFILTRATES & CONSOLIDATIONS (雙側顯著肺浸潤與實變) -->
+  <g opacity="0.8">
+    <!-- Right lung extensive infiltration (Image Left) -->
+    <ellipse cx="260" cy="380" rx="100" ry="80" fill="#cbd5e1" filter="url(#consolidation-blur)" />
+    <ellipse cx="240" cy="480" rx="90" ry="70" fill="#f8fafc" filter="url(#heavy-blur)" />
+    <ellipse cx="310" cy="420" rx="70" ry="60" fill="#ffffff" filter="url(#heavy-blur)" opacity="0.6" />
+
+    <!-- Left lung lower lobe consolidation (Image Right) -->
+    <ellipse cx="540" cy="420" rx="110" ry="90" fill="#e2e8f0" filter="url(#consolidation-blur)" />
+    <ellipse cx="560" cy="520" rx="100" ry="80" fill="#f8fafc" filter="url(#heavy-blur)" />
+    <ellipse cx="490" cy="460" rx="80" ry="70" fill="#ffffff" filter="url(#heavy-blur)" opacity="0.7" />
+
+    <!-- Air Bronchograms (支氣管氣像) -->
+    <path d="M 320 320 L 250 440 M 320 320 L 280 480 M 480 320 L 550 460" stroke="#0f172a" stroke-width="3" opacity="0.6" stroke-linecap="round" />
+  </g>
+
+  <!-- Mediastinum & Cardiac Silhouette -->
+  <path d="M 380 200 Q 430 300 470 420 Q 510 560 380 620 Q 330 600 360 400 Z" fill="#cbd5e1" opacity="0.5" filter="url(#soft-blur)" />
+
+  <!-- Diaphragm Domes -->
+  <path d="M 120 620 Q 260 540 390 600 L 390 700 L 120 700 Z" fill="#334155" opacity="0.8" filter="url(#soft-blur)" />
+  <path d="M 120 620 Q 260 540 390 600" fill="none" stroke="#f1f5f9" stroke-width="5" opacity="0.5" />
+
+  <path d="M 410 600 Q 540 560 680 640 L 680 720 L 410 720 Z" fill="#334155" opacity="0.8" filter="url(#soft-blur)" />
+  <path d="M 410 600 Q 540 560 680 640" fill="none" stroke="#f1f5f9" stroke-width="5" opacity="0.5" />
+
+  <!-- Trachea & Endotracheal / Trach Tube -->
+  <rect x="388" y="90" width="24" height="180" rx="4" fill="#030712" stroke="#cbd5e1" stroke-width="1.5" opacity="0.6" />
+
+  <g id="tracheostomy-tube">
+    <rect x="365" y="115" width="70" height="22" rx="6" fill="#f8fafc" stroke="#38bdf8" stroke-width="2" opacity="0.95" />
+    <path d="M 400 125 C 400 160 396 200 396 230" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" />
+    <path d="M 400 125 C 400 160 396 200 396 230" fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round" />
+  </g>
+
+  <!-- NG Tube -->
+  <path d="M 412 80 L 412 360 Q 412 520 416 610 Q 420 670 480 730" fill="none" stroke="#ffffff" stroke-width="2.5" opacity="0.8" />
+</svg>

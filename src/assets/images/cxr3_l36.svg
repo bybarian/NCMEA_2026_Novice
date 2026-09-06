@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 900" width="100%" height="100%" style="background-color: #030712;">
+  <!-- Dark Radiography Canvas -->
+  <rect width="800" height="900" fill="#030712" />
+  
+  <defs>
+    <filter id="soft-blur">
+      <feGaussianBlur stdDeviation="8" />
+    </filter>
+    <filter id="heavy-blur">
+      <feGaussianBlur stdDeviation="16" />
+    </filter>
+    <filter id="whiteout-blur">
+      <feGaussianBlur stdDeviation="28" />
+    </filter>
+    <radialGradient id="lung-grad-right" cx="40%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#1e293b" stop-opacity="0.9"/>
+      <stop offset="60%" stop-color="#0f172a" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#030712" stop-opacity="1"/>
+    </radialGradient>
+  </defs>
+
+  <!-- L36 Marker in Top Right Corner -->
+  <text x="730" y="70" fill="#f8fafc" font-family="Arial, sans-serif" font-size="36" font-weight="bold" letter-spacing="2" opacity="0.9">L36</text>
+
+  <!-- Thoracic Cage & Spine -->
+  <line x1="400" y1="80" x2="400" y2="880" stroke="#cbd5e1" stroke-width="22" stroke-dasharray="28 10" opacity="0.45" />
+  <line x1="400" y1="80" x2="400" y2="880" stroke="#ffffff" stroke-width="12" stroke-dasharray="28 10" opacity="0.3" />
+
+  <!-- Clavicles -->
+  <path d="M 400 130 Q 260 90 120 180" fill="none" stroke="#f8fafc" stroke-width="12" stroke-linecap="round" opacity="0.7" />
+  <path d="M 400 130 Q 540 90 680 180" fill="none" stroke="#f8fafc" stroke-width="12" stroke-linecap="round" opacity="0.7" />
+
+  <!-- Ribs -->
+  <g opacity="0.35" stroke="#e2e8f0" stroke-linecap="round" fill="none">
+    <path d="M 400 200 Q 220 220 150 320 Q 260 400 400 380" stroke-width="14" />
+    <path d="M 400 200 Q 580 220 650 320 Q 540 400 400 380" stroke-width="14" />
+    <path d="M 400 280 Q 180 310 130 430 Q 260 510 400 480" stroke-width="14" />
+    <path d="M 400 280 Q 620 310 670 430 Q 540 510 400 480" stroke-width="14" />
+    <path d="M 400 360 Q 160 410 120 540 Q 260 620 400 580" stroke-width="14" />
+    <path d="M 400 360 Q 640 410 680 540 Q 540 620 400 580" stroke-width="14" />
+  </g>
+
+  <!-- Right Lung Field (Anatomical Right, Image Left) -->
+  <path d="M 380 160 C 240 140 150 250 140 580 C 220 660 320 650 380 620 Z" fill="url(#lung-grad-right)" />
+
+  <!-- LEFT LUNG MASSIVE WHITEOUT / EFFUSION (左肺全片緻密實變與胸膜積水) -->
+  <path d="M 420 160 C 560 140 670 240 680 600 C 600 700 480 720 420 650 Z" fill="#e2e8f0" filter="url(#whiteout-blur)" opacity="0.95" />
+  <path d="M 440 220 C 560 200 660 300 670 580 C 600 680 500 700 440 630 Z" fill="#ffffff" filter="url(#heavy-blur)" opacity="0.9" />
+
+  <!-- Diaphragm Domes -->
+  <path d="M 120 620 Q 260 540 390 600 L 390 700 L 120 700 Z" fill="#334155" opacity="0.8" filter="url(#soft-blur)" />
+
+  <!-- 1. CHEST TUBE (胸管 - Image Left / Right Chest Wall) -->
+  <g id="chest-tube">
+    <path d="M 80 520 L 320 590" fill="none" stroke="#f8fafc" stroke-width="7" stroke-linecap="round" />
+    <path d="M 80 520 L 320 590" fill="none" stroke="#0284c7" stroke-width="3" stroke-linecap="round" />
+    <circle cx="320" cy="590" r="4" fill="#38bdf8" />
+    <!-- Chest Tube Marker holes -->
+    <circle cx="280" cy="580" r="2" fill="#000" />
+    <circle cx="250" cy="572" r="2" fill="#000" />
+  </g>
+
+  <!-- 2. ECG LEADS & ELECTRODE PADS (前胸壁 ECG 圓形貼片與導線) -->
+  <g id="ecg-leads">
+    <!-- White Circular Electrode Pads with Metallic Button center -->
+    <circle cx="310" cy="380" r="14" fill="#ffffff" stroke="#94a3b8" stroke-width="2" />
+    <circle cx="310" cy="380" r="5" fill="#334155" />
+
+    <circle cx="580" cy="400" r="14" fill="#ffffff" stroke="#94a3b8" stroke-width="2" />
+    <circle cx="580" cy="400" r="5" fill="#334155" />
+
+    <!-- Thin Flexible Lead Wires across anterior chest -->
+    <path d="M 310 380 Q 450 420 580 400" fill="none" stroke="#cbd5e1" stroke-width="2.5" />
+    <path d="M 310 380 Q 200 460 120 500" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4 2" />
+    <path d="M 580 400 Q 680 480 760 520" fill="none" stroke="#94a3b8" stroke-width="2" stroke-dasharray="4 2" />
+  </g>
+
+  <!-- 3. SPINAL FIXATION HARDWARE (腰椎骨科固定螺絲與金屬支架) -->
+  <g id="spine-hardware" transform="translate(0, 100)">
+    <rect x="350" y="680" width="10" height="90" fill="#ffffff" rx="2" stroke="#64748b" stroke-width="1" />
+    <rect x="440" y="680" width="10" height="90" fill="#ffffff" rx="2" stroke="#64748b" stroke-width="1" />
+    <!-- Screws -->
+    <rect x="340" y="690" width="30" height="8" fill="#f8fafc" stroke="#334155" stroke-width="1" />
+    <rect x="430" y="690" width="30" height="8" fill="#f8fafc" stroke="#334155" stroke-width="1" />
+    <rect x="340" y="750" width="30" height="8" fill="#f8fafc" stroke="#334155" stroke-width="1" />
+    <rect x="430" y="750" width="30" height="8" fill="#f8fafc" stroke="#334155" stroke-width="1" />
+  </g>
+
+  <!-- Trachea / ETT -->
+  <rect x="388" y="90" width="24" height="180" rx="4" fill="#030712" stroke="#cbd5e1" stroke-width="1.5" opacity="0.6" />
+</svg>
