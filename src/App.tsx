@@ -12,7 +12,6 @@ import { LabResultsSection } from './components/LabResultsSection';
 import { CPOEOrderPractice } from './components/CPOEOrderPractice';
 import { EcgSection } from './components/EcgSection';
 import { UltrasoundSection } from './components/UltrasoundSection';
-import { AdminBackstageModal } from './components/AdminBackstageModal';
 import { 
   seedDefaultPatientsIfEmpty, 
   savePatientToFirestore, 
@@ -87,15 +86,40 @@ export default function App() {
           }
         });
 
-        return mergedList.map(patient => ({
-          ...patient,
-          imagingStudies: patient.imagingStudies || [],
-          ecgReports: patient.ecgReports || [],
-          ultrasoundReports: patient.ultrasoundReports || [],
-          labReports: patient.labReports || [],
-          clinicalOrders: patient.clinicalOrders || [],
-          prescriptions: patient.prescriptions || []
-        }));
+        return mergedList.map(patient => {
+          const presetMatch = PRESET_PATIENTS.find(p => p.id === patient.id);
+          let imagingStudies = patient.imagingStudies || [];
+          let ecgReports = patient.ecgReports || [];
+          let ultrasoundReports = patient.ultrasoundReports || [];
+
+          if (presetMatch) {
+            presetMatch.imagingStudies?.forEach(presetStudy => {
+              if (!imagingStudies.some(s => s.id === presetStudy.id || s.imageUrl === presetStudy.imageUrl)) {
+                imagingStudies = [presetStudy, ...imagingStudies];
+              }
+            });
+            presetMatch.ecgReports?.forEach(presetEcg => {
+              if (!ecgReports.some(e => e.id === presetEcg.id || e.imageUrl === presetEcg.imageUrl)) {
+                ecgReports = [presetEcg, ...ecgReports];
+              }
+            });
+            presetMatch.ultrasoundReports?.forEach(presetUltra => {
+              if (!ultrasoundReports.some(u => u.id === presetUltra.id || u.imageUrl === presetUltra.imageUrl)) {
+                ultrasoundReports = [presetUltra, ...ultrasoundReports];
+              }
+            });
+          }
+
+          return {
+            ...patient,
+            imagingStudies,
+            ecgReports,
+            ultrasoundReports,
+            labReports: patient.labReports || [],
+            clinicalOrders: patient.clinicalOrders || [],
+            prescriptions: patient.prescriptions || []
+          };
+        });
       } catch (e) {
         console.error("Error loading cached patients", e);
       }
@@ -166,7 +190,6 @@ export default function App() {
   const [examLog, setExamLog] = useState<{ id: string; timestamp: string; timerTime: string; patientName: string; action: string }[]>([]);
   const [showLogModal, setShowLogModal] = useState<boolean>(false);
   const [showBloodDrawAlertModal, setShowBloodDrawAlertModal] = useState<boolean>(false);
-  const [showAdminModal, setShowAdminModal] = useState<boolean>(false);
 
   // Synchronous ref to prevent stale React state closures from accidentally turning timer back on
   const examStateRef = useRef({
@@ -368,13 +391,61 @@ export default function App() {
         });
 
         // Merge any missing preset patients (e.g. newly added test patients)
-        const mergedList = [...cleanedFirestorePatients];
+        const rawList = [...cleanedFirestorePatients];
         PRESET_PATIENTS.forEach(preset => {
-          const exists = mergedList.some(p => p.id === preset.id);
+          const exists = rawList.some(p => p.id === preset.id);
           if (!exists) {
-            mergedList.push(preset);
+            rawList.push(preset);
             savePatientToFirestore(preset);
           }
+        });
+
+        // Enrich presets with new studies/ecgs/ultrasound if updated in code
+        const mergedList = rawList.map(patient => {
+          const presetMatch = PRESET_PATIENTS.find(p => p.id === patient.id);
+          let imagingStudies = patient.imagingStudies || [];
+          let ecgReports = patient.ecgReports || [];
+          let ultrasoundReports = patient.ultrasoundReports || [];
+
+          if (presetMatch) {
+            let updated = false;
+            presetMatch.imagingStudies?.forEach(presetStudy => {
+              if (!imagingStudies.some(s => s.id === presetStudy.id || s.imageUrl === presetStudy.imageUrl)) {
+                imagingStudies = [presetStudy, ...imagingStudies];
+                updated = true;
+              }
+            });
+            presetMatch.ecgReports?.forEach(presetEcg => {
+              if (!ecgReports.some(e => e.id === presetEcg.id || e.imageUrl === presetEcg.imageUrl)) {
+                ecgReports = [presetEcg, ...ecgReports];
+                updated = true;
+              }
+            });
+            presetMatch.ultrasoundReports?.forEach(presetUltra => {
+              if (!ultrasoundReports.some(u => u.id === presetUltra.id || u.imageUrl === presetUltra.imageUrl)) {
+                ultrasoundReports = [presetUltra, ...ultrasoundReports];
+                updated = true;
+              }
+            });
+
+            if (updated) {
+              const enrichedPatient = {
+                ...patient,
+                imagingStudies,
+                ecgReports,
+                ultrasoundReports
+              };
+              savePatientToFirestore(enrichedPatient);
+              return enrichedPatient;
+            }
+          }
+
+          return {
+            ...patient,
+            imagingStudies,
+            ecgReports,
+            ultrasoundReports
+          };
         });
 
         // Cache current patient state so we do not trigger extra Firestore writes
@@ -1628,18 +1699,6 @@ export default function App() {
                 登出
               </button>
             </div>
-
-            {/* Backstage Upload Admin Panel Button */}
-            <button
-              type="button"
-              onClick={() => setShowAdminModal(true)}
-              className="bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold px-3 py-1 rounded-lg text-xs flex items-center gap-1.5 shadow-sm transition-all cursor-pointer font-sans border border-amber-300 active:scale-95"
-              title="開啟教研考官後台，可上傳影像、心電圖與超音波"
-            >
-              <Upload className="w-3.5 h-3.5 text-slate-950" />
-              <span className="hidden sm:inline">後台影像與報告上傳</span>
-              <span className="sm:hidden">後台</span>
-            </button>
           </div>
         </header>
 
@@ -2204,16 +2263,6 @@ export default function App() {
             </div>
           </div>
         </div>
-      )}
-
-      {/* Admin Backstage Upload Modal */}
-      {showAdminModal && (
-        <AdminBackstageModal
-          patients={patients}
-          activePatientId={activePatientId}
-          onClose={() => setShowAdminModal(false)}
-          onUpdatePatient={handleUpdatePatient}
-        />
       )}
     </div>
   );

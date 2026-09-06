@@ -89,7 +89,7 @@ export const MedicationHistorySection: React.FC<MedicationHistorySectionProps> =
         <div className="text-center py-20 text-slate-400 text-xs border border-dashed border-slate-200 rounded-lg">
           🔍 依據目前的關鍵字或途徑過濾，查無任何符合之用藥歷史紀錄。
           <p className="text-[10px] text-slate-450 mt-1 max-w-xs mx-auto">
-            小叮嚀：您可於上方搜尋列清除檢索或更換途徑分類；亦可由後台新增此病人的初始藥物史。
+            小叮嚀：您可於上方搜尋列清除檢索或更換途徑分類。
           </p>
         </div>
       ) : (

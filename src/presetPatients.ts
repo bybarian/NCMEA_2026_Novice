@@ -563,17 +563,48 @@ export const PRESET_PATIENTS: Patient[] = [
     ],
     imagingStudies: [
       {
+        id: 'img-hr-cxr',
+        title: '胸部 X 光檢查 (Chest PA/AP View)',
+        studyType: 'XRAY',
+        imageUrl: '/cxr/CXR.png',
+        description: 'Chest PA view (2024-05-12 10:30:15): Bilateral lung fields are clear without active lung lesions, consolidations, or pneumothorax. Costophrenic angles are sharp. Cardiothoracic ratio (CTR) is within normal limits. Subdiaphragmatic gas shadow is normal without free air.',
+        dateTime: '2024-05-12 10:30:15',
+        visible: true,
+        publishMode: 'immediate'
+      },
+      {
         id: 'img-hr-1',
-        title: '腹部超音波/電腦斷層 (Abdominal CT) - 急性闌尾炎',
+        title: '腹部電腦斷層 (Abdominal CT) - 急性闌尾炎',
         studyType: 'CT',
-        imageUrl: 'ct_appendicitis',
+        imageUrl: '/ct/CT.png',
         description: '右下腹闌尾管徑腫大（直徑達 9.2 mm，正常<6mm），闌尾壁增厚並有周圍脂肪層混濁（fat stranding）及少量局限性液體積聚，無明顯穿孔或形成膿瘍。符合急性闌尾炎影像特徵。',
-        dateTime: '2026-10-03T11:00:00',
+        dateTime: '2024-05-12 11:00:00',
         visible: true,
         publishMode: 'immediate'
       }
     ],
-    ecgReports: [],
+    ecgReports: [
+      {
+        id: 'ecg-hr-1',
+        title: '標準 12 導程心電圖 (12-Lead ECG) - 正常竇性心律',
+        imageUrl: '/ecg/ECG.png',
+        description: 'Vent. rate: 72 BPM, PR interval: 160 ms, QRS duration: 88 ms, QT/QTcB: 392/429 ms, P-R-T axes: 54 35 41°. Interpretation: Normal sinus rhythm. Normal ECG. No ST-T segment elevation or acute myocardial ischemia.',
+        dateTime: '2024-05-12 10:30:15',
+        visible: true,
+        publishMode: 'immediate'
+      }
+    ],
+    ultrasoundReports: [
+      {
+        id: 'ultra-hr-1',
+        title: '右下腹重點式超音波 (POCUS RLQ Appendix Target Sign)',
+        imageUrl: '/pocus/Ultrasound.png',
+        description: 'RLQ targeted ultrasound (12-May-2024 10:30:15): High-frequency linear probe examination of RLQ shows a non-compressible, blind-ended, aperistaltic tubular structure with characteristic "target sign" (bull\'s-eye appearance) in transverse view. Prominent submucosal thickening with surrounding hyperechoic inflamed mesenteric fat. Compatible with Acute Appendicitis.',
+        dateTime: '2024-05-12 10:30:15',
+        visible: true,
+        publishMode: 'immediate'
+      }
+    ],
     labReports: [
       {
         id: 'lab-hr-cbc',

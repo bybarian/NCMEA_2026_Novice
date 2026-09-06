@@ -309,7 +309,7 @@ export const PatientList: React.FC<PatientListProps> = ({
       <div className="flex-1 overflow-y-auto divide-y divide-slate-150" id="patient-list">
         {filteredPatients.length === 0 ? (
           <div className="p-8 text-center text-slate-400 text-xs font-semibold leading-relaxed">
-            {nonHiddenPatients.length === 0 ? '目前無公開住院病患 (若已被考官設為隱藏，可至後台取消隱藏)' : '查無相符的住院病人'}
+            {nonHiddenPatients.length === 0 ? '目前無公開住院病患' : '查無相符的住院病人'}
           </div>
         ) : (
           filteredPatients.map((patient) => {
