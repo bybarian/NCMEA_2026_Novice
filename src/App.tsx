@@ -93,17 +93,44 @@ export default function App() {
 
           if (presetMatch) {
             presetMatch.imagingStudies?.forEach(presetStudy => {
-              if (!imagingStudies.some(s => s.id === presetStudy.id || s.imageUrl === presetStudy.imageUrl)) {
+              const existingIdx = imagingStudies.findIndex(s => s.id === presetStudy.id);
+              if (existingIdx !== -1) {
+                imagingStudies[existingIdx] = {
+                  ...imagingStudies[existingIdx],
+                  title: presetStudy.title,
+                  dateTime: presetStudy.dateTime,
+                  description: presetStudy.description,
+                  imageUrl: presetStudy.imageUrl
+                };
+              } else if (!imagingStudies.some(s => s.imageUrl === presetStudy.imageUrl)) {
                 imagingStudies = [presetStudy, ...imagingStudies];
               }
             });
             presetMatch.ecgReports?.forEach(presetEcg => {
-              if (!ecgReports.some(e => e.id === presetEcg.id || e.imageUrl === presetEcg.imageUrl)) {
+              const existingIdx = ecgReports.findIndex(e => e.id === presetEcg.id);
+              if (existingIdx !== -1) {
+                ecgReports[existingIdx] = {
+                  ...ecgReports[existingIdx],
+                  title: presetEcg.title,
+                  dateTime: presetEcg.dateTime,
+                  description: presetEcg.description,
+                  imageUrl: presetEcg.imageUrl
+                };
+              } else if (!ecgReports.some(e => e.imageUrl === presetEcg.imageUrl)) {
                 ecgReports = [presetEcg, ...ecgReports];
               }
             });
             presetMatch.ultrasoundReports?.forEach(presetUltra => {
-              if (!ultrasoundReports.some(u => u.id === presetUltra.id || u.imageUrl === presetUltra.imageUrl)) {
+              const existingIdx = ultrasoundReports.findIndex(u => u.id === presetUltra.id);
+              if (existingIdx !== -1) {
+                ultrasoundReports[existingIdx] = {
+                  ...ultrasoundReports[existingIdx],
+                  title: presetUltra.title,
+                  dateTime: presetUltra.dateTime,
+                  description: presetUltra.description,
+                  imageUrl: presetUltra.imageUrl
+                };
+              } else if (!ultrasoundReports.some(u => u.imageUrl === presetUltra.imageUrl)) {
                 ultrasoundReports = [presetUltra, ...ultrasoundReports];
               }
             });
@@ -408,19 +435,67 @@ export default function App() {
           if (presetMatch) {
             let updated = false;
             presetMatch.imagingStudies?.forEach(presetStudy => {
-              if (!imagingStudies.some(s => s.id === presetStudy.id || s.imageUrl === presetStudy.imageUrl)) {
+              const existingIdx = imagingStudies.findIndex(s => s.id === presetStudy.id);
+              if (existingIdx !== -1) {
+                if (
+                  imagingStudies[existingIdx].dateTime !== presetStudy.dateTime ||
+                  imagingStudies[existingIdx].title !== presetStudy.title ||
+                  imagingStudies[existingIdx].description !== presetStudy.description
+                ) {
+                  imagingStudies[existingIdx] = {
+                    ...imagingStudies[existingIdx],
+                    title: presetStudy.title,
+                    dateTime: presetStudy.dateTime,
+                    description: presetStudy.description,
+                    imageUrl: presetStudy.imageUrl
+                  };
+                  updated = true;
+                }
+              } else if (!imagingStudies.some(s => s.imageUrl === presetStudy.imageUrl)) {
                 imagingStudies = [presetStudy, ...imagingStudies];
                 updated = true;
               }
             });
             presetMatch.ecgReports?.forEach(presetEcg => {
-              if (!ecgReports.some(e => e.id === presetEcg.id || e.imageUrl === presetEcg.imageUrl)) {
+              const existingIdx = ecgReports.findIndex(e => e.id === presetEcg.id);
+              if (existingIdx !== -1) {
+                if (
+                  ecgReports[existingIdx].dateTime !== presetEcg.dateTime ||
+                  ecgReports[existingIdx].title !== presetEcg.title ||
+                  ecgReports[existingIdx].description !== presetEcg.description
+                ) {
+                  ecgReports[existingIdx] = {
+                    ...ecgReports[existingIdx],
+                    title: presetEcg.title,
+                    dateTime: presetEcg.dateTime,
+                    description: presetEcg.description,
+                    imageUrl: presetEcg.imageUrl
+                  };
+                  updated = true;
+                }
+              } else if (!ecgReports.some(e => e.imageUrl === presetEcg.imageUrl)) {
                 ecgReports = [presetEcg, ...ecgReports];
                 updated = true;
               }
             });
             presetMatch.ultrasoundReports?.forEach(presetUltra => {
-              if (!ultrasoundReports.some(u => u.id === presetUltra.id || u.imageUrl === presetUltra.imageUrl)) {
+              const existingIdx = ultrasoundReports.findIndex(u => u.id === presetUltra.id);
+              if (existingIdx !== -1) {
+                if (
+                  ultrasoundReports[existingIdx].dateTime !== presetUltra.dateTime ||
+                  ultrasoundReports[existingIdx].title !== presetUltra.title ||
+                  ultrasoundReports[existingIdx].description !== presetUltra.description
+                ) {
+                  ultrasoundReports[existingIdx] = {
+                    ...ultrasoundReports[existingIdx],
+                    title: presetUltra.title,
+                    dateTime: presetUltra.dateTime,
+                    description: presetUltra.description,
+                    imageUrl: presetUltra.imageUrl
+                  };
+                  updated = true;
+                }
+              } else if (!ultrasoundReports.some(u => u.imageUrl === presetUltra.imageUrl)) {
                 ultrasoundReports = [presetUltra, ...ultrasoundReports];
                 updated = true;
               }
