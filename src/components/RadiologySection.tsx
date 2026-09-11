@@ -167,10 +167,9 @@ export const RadiologySection: React.FC<RadiologySectionProps> = ({ patient, cli
             <ImageIcon className="w-12 h-12 text-slate-350 stroke-1" />
           </div>
           <div className="space-y-1.5 max-w-md">
-            <p className="font-bold text-slate-700">放射與電切片庫房空置中 (No Imaging Reports)</p>
+            <p className="font-bold text-slate-700">放射與影像切片庫房空置中 (No Imaging Reports)</p>
             <p className="text-[11px] text-slate-500 leading-relaxed font-sans">
-              請到<strong>「開立醫囑（可開藥物）」</strong>分頁中追加電腦斷層掃描檢查（CT Scan）。
-              影像儀校準並啟動掃描傳輸後，將依放射學時效完成，隨即同步推播影像底片至此分頁。
+              目前本病案尚無可調閱之影像檢查報告。若有新排定之放射學檢查，系統將在此同步呈現。
             </p>
           </div>
         </div>

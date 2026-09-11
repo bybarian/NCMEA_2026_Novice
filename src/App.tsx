@@ -9,7 +9,6 @@ import { MedicationHistorySection } from './components/MedicationHistorySection'
 import { PatientSummarySection } from './components/PatientSummarySection';
 import { RadiologySection } from './components/RadiologySection';
 import { LabResultsSection } from './components/LabResultsSection';
-import { CPOEOrderPractice } from './components/CPOEOrderPractice';
 import { EcgSection } from './components/EcgSection';
 import { UltrasoundSection } from './components/UltrasoundSection';
 import { 
@@ -22,7 +21,7 @@ import {
 } from './firebase';
 import { 
   Building2, Users, ShoppingBag, BellRing, Clock, ShieldAlert,
-  ChevronRight, ArrowRight, Pill, Microscope, FileText, Image as ImageIcon, ShoppingCart, X, User, Monitor, Trash2, RotateCcw,
+  ChevronRight, ArrowRight, Pill, Microscope, FileText, Image as ImageIcon, ShoppingCart, X, User, Trash2, RotateCcw,
   Activity, Video, Lock, Key, LogOut, Upload
 } from 'lucide-react';
 
@@ -135,7 +134,7 @@ export default function App() {
   });
 
   // Active workspace tab
-  const [activeTab, setActiveTab] = useState<'emr' | 'summary' | 'radiology' | 'labs' | 'ecg' | 'ultrasound' | 'rxHistory' | 'cpoe'>('emr');
+  const [activeTab, setActiveTab] = useState<'emr' | 'summary' | 'radiology' | 'labs' | 'ecg' | 'ultrasound' | 'rxHistory'>('emr');
 
   // Login Authentication State (Account: TGH, Password: 123456)
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
@@ -189,7 +188,6 @@ export default function App() {
   const [durationSec, setDurationSec] = useState<number>(900);
   const [examLog, setExamLog] = useState<{ id: string; timestamp: string; timerTime: string; patientName: string; action: string }[]>([]);
   const [showLogModal, setShowLogModal] = useState<boolean>(false);
-  const [showBloodDrawAlertModal, setShowBloodDrawAlertModal] = useState<boolean>(false);
 
   // Synchronous ref to prevent stale React state closures from accidentally turning timer back on
   const examStateRef = useRef({
@@ -819,7 +817,6 @@ export default function App() {
       else if (activeTab === 'summary') tabName = '查看病情摘要';
       else if (activeTab === 'labs') tabName = '查看檢驗報告欄位';
       else if (activeTab === 'radiology') tabName = '查看影像醫學報告';
-      else if (activeTab === 'cpoe') tabName = '進入醫囑系統 (CPOE)';
       
       if (tabName) {
         addExamLogEntry(tabName, activePatientForLog.name);
@@ -1156,193 +1153,6 @@ export default function App() {
     }
   };
 
-  // Place clinical order (CBC, DC, BIO, BLOOD_GAS, CT) from Student Panel
-  const handlePlaceOrder = (
-    orderType: ClinicalOrder['orderType'],
-    details: string,
-    delaySec: number,
-    targetDisplayTime: string,
-    selectedItems?: string[]
-  ) => {
-    if (!activePatientId) return;
-
-    // "要在啟動倒數計時的情況下，無論是第幾分鐘抽血，都是在倒數9分鐘出現"
-    // "抽血檢驗後，不能快速出現結果，一律都是倒數計時九分鐘出"
-    let finalDelaySec = delaySec;
-    const isBloodDraw = ['CBC', 'DC', 'BIO', 'BLOOD_GAS'].includes(orderType);
-    
-    if (isBloodDraw) {
-      if (examTimerActive) {
-        if (examTimeRemaining > 540) {
-          finalDelaySec = examTimeRemaining - 540;
-        } else {
-          finalDelaySec = 0;
-        }
-      } else {
-        // Under free practice mode (no exam timer active), default to 540 seconds (9 minutes)
-        finalDelaySec = 540;
-      }
-    }
-
-    // Calculate simulation specific timer labels if countdown is active
-    let timerOrderedAt: string | undefined = undefined;
-    let timerDisplayTime: string | undefined = undefined;
-    if (examTimerActive) {
-      const orderMin = Math.floor(examTimeRemaining / 60);
-      const orderSec = examTimeRemaining % 60;
-      timerOrderedAt = `倒數 ${orderMin.toString().padStart(2, '0')}:${orderSec.toString().padStart(2, '0')}`;
-
-      if (isBloodDraw) {
-        const actualFinishTime = examTimeRemaining > 540 ? 540 : examTimeRemaining;
-        const finishMin = Math.floor(actualFinishTime / 60);
-        const finishSec = actualFinishTime % 60;
-        timerDisplayTime = `倒數 ${finishMin.toString().padStart(2, '0')}:${finishSec.toString().padStart(2, '0')}`;
-      } else {
-        const finishTime = Math.max(0, examTimeRemaining - finalDelaySec);
-        const finishMin = Math.floor(finishTime / 60);
-        const finishSec = finishTime % 60;
-        timerDisplayTime = `倒數 ${finishMin.toString().padStart(2, '0')}:${finishSec.toString().padStart(2, '0')}`;
-      }
-    }
-
-    const newOrder: ClinicalOrder = {
-      id: `ord-${Date.now()}`,
-      orderType,
-      details,
-      orderedAt: new Date().toISOString(),
-      displayTime: targetDisplayTime,
-      delaySeconds: finalDelaySec,
-      countdownRemaining: finalDelaySec,
-      status: 'PENDING',
-      selectedItems,
-      timerOrderedAt,
-      timerDisplayTime
-    };
-
-    if (examTimerActive && isBloodDraw) {
-      setShowBloodDrawAlertModal(true);
-    }
-
-    const pat = patients.find(p => p.id === activePatientId);
-
-    // Logging to Simulation Activity Log
-    if (examTimerActive) {
-      if (orderType === 'MED') {
-        let medDetails = details;
-        if (details.startsWith('[MED_ORDER]')) {
-          const parts = details.split('|');
-          const namePart = parts.find(p => p.startsWith('名稱:'))?.replace('名稱:', '') || '';
-          const dosePart = parts.find(p => p.startsWith('劑量:'))?.replace('劑量:', '') || '';
-          const routePart = parts.find(p => p.startsWith('途徑:'))?.replace('途徑:', '') || '';
-          const freqPart = parts.find(p => p.startsWith('頻率:'))?.replace('頻率:', '') || '';
-          medDetails = `${namePart} ${dosePart} (${routePart}, ${freqPart})`;
-        }
-        addExamLogEntry(`開立給藥醫囑：${medDetails}`, pat?.name || '');
-      } else if (orderType === 'CT') {
-        addExamLogEntry(`開立影像科檢查醫囑：${details}`, pat?.name || '');
-      } else {
-        addExamLogEntry(`開立實驗室檢驗醫囑 [${orderType}]${selectedItems && selectedItems.length > 0 ? `：${selectedItems.join(', ')}` : ''}`, pat?.name || '');
-      }
-    }
-
-    const updatedPatients = patients.map((pat) => {
-      if (pat.id !== activePatientId) return pat;
-      return {
-        ...pat,
-        clinicalOrders: [newOrder, ...pat.clinicalOrders]
-      };
-    });
-
-    setPatients(updatedPatients);
-
-    // Reset dismissed warning for this patient so the new pending progress banner is visible again
-    if (activePatientId) {
-      setDismissedWarnings(prev => ({ ...prev, [activePatientId]: false }));
-    }
-
-    // If delay is immediat (0s), it loops instantly in the tick or we handle it here:
-    if (finalDelaySec === 0) {
-      // Instantly inject
-      const activePatIndex = updatedPatients.findIndex(p => p.id === activePatientId);
-      if (activePatIndex !== -1) {
-        const p = { ...updatedPatients[activePatIndex] };
-        injectSimulatedReport(p, orderType, targetDisplayTime, selectedItems, details);
-        
-        // Convert that order from list to COMPLETED
-        p.clinicalOrders = p.clinicalOrders.map(o => o.id === newOrder.id ? { ...o, status: 'COMPLETED', countdownRemaining: 0 } : o);
-        
-        const freshList = [...updatedPatients];
-        freshList[activePatIndex] = p;
-        setPatients(freshList);
-
-        const successMsg = orderType === 'MED' 
-          ? `⚡ 病患 ${p.name} 的藥品處方開立即時核定配送成功！`
-          : `⚡ 醫囑即時派發成功！病患 ${p.name} 的 ${orderType} 數據已實時 analysis 呈報！`;
-
-        setToasts(prev => [...prev, { id: `toast-inst-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`, message: successMsg, type: 'success' }]);
-        triggerAudioNotify();
-      }
-    } else {
-      const pendingMsg = orderType === 'MED'
-        ? `📥 已在 HIS 管道登錄口服與點滴處方：正在排配、傳送至臨床藥局中...`
-        : `📥 已在 HIS 管道登錄醫囑：${orderType} 檢項正在排程中...`;
-      setToasts(prev => [...prev, { id: `toast-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`, message: pendingMsg, type: 'info' }]);
-    }
-  };
-
-  // Immediate Fast Forward bypass timer
-  const handleFastForwardOrder = (orderId: string) => {
-    const updatedPatients = patients.map((pat) => {
-      const orderIdx = pat.clinicalOrders.findIndex(o => o.id === orderId);
-      if (orderIdx === -1) return pat;
-
-      const order = pat.clinicalOrders[orderIdx];
-      const completedOrder: ClinicalOrder = {
-        ...order,
-        status: 'COMPLETED',
-        countdownRemaining: 0
-      };
-
-      // Logging fast forward
-      if (examTimerActive) {
-        addExamLogEntry(`⚡ 學生手動加速完成醫囑項目：[${order.orderType}]`, pat.name);
-      }
-
-      // Create copies
-      const newOrders = [...pat.clinicalOrders];
-      newOrders[orderIdx] = completedOrder;
-
-      const p = { ...pat, clinicalOrders: newOrders };
-      injectSimulatedReport(p, order.orderType, order.displayTime, order.selectedItems, order.details);
-
-      const successLabel = order.orderType === 'MED' ? '處方開立給藥' : `臨床檢測 ${order.orderType}`;
-      setToasts(prev => [...prev, { id: `toast-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`, message: `⚡ (快速通關) 病患 ${pat.name} 的${successLabel}完成！`, type: 'success' }]);
-      triggerAudioNotify();
-
-      return p;
-    });
-
-    setPatients(updatedPatients);
-  };
-
-  // Cancel order in pipeline
-  const handleCancelOrder = (orderId: string) => {
-    const pat = patients.find(p => p.clinicalOrders.some(o => o.id === orderId));
-    const order = pat?.clinicalOrders.find(o => o.id === orderId);
-    if (examTimerActive && pat && order) {
-      addExamLogEntry(`🗑️ 學生撤銷退回醫囑項目：[${order.orderType}]`, pat.name);
-    }
-
-    const updatedPatients = patients.map((pat) => {
-      return {
-        ...pat,
-        clinicalOrders: pat.clinicalOrders.filter(o => o.id !== orderId)
-      };
-    });
-    setPatients(updatedPatients);
-    setToasts(prev => [...prev, { id: `toast-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`, message: `🗑️ 醫囑已撤銷登錄`, type: 'info' }]);
-  };
-
   // Register New Patient callback
   const handleAddPatient = (newPat: Patient) => {
     setPatients([newPat, ...patients]);
@@ -1424,12 +1234,12 @@ export default function App() {
         };
         const next = patients.map(p => p.id === updated.id ? updated : p);
         setPatients(next);
-        setToasts(prev => [...prev, { id: `toast-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`, message: `🔄 已成功重設【${pat.name}】的病歷與臨床場景，清空所有在本次演練中開立的抽血檢查、影像檢查與處方給藥！已自動隱藏非「立即公開」之報告。`, type: 'success' }]);
+        setToasts(prev => [...prev, { id: `toast-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`, message: `🔄 已成功重設【${pat.name}】的病歷與臨床場景！已自動隱藏非「立即公開」之報告。`, type: 'success' }]);
         triggerAudioNotify();
 
         // Also add entry to simulation activity log if exam timer is active
         if (examTimerActive) {
-          addExamLogEntry(`🔄 學生執行「一鍵重設場景」，清空該病健的所有開立醫囑與檢查結果。`, pat.name);
+          addExamLogEntry(`🔄 學生執行「一鍵重設場景」，重設該病患之臨床情境。`, pat.name);
         }
       }
     } else {
@@ -1791,15 +1601,6 @@ export default function App() {
                     病情摘要
                   </button>
                   <button
-                    onClick={() => setActiveTab('cpoe')}
-                    className={`px-3 py-1.5 rounded-md transition-all flex items-center gap-1.5 cursor-pointer font-sans text-[11px] ${
-                      activeTab === 'cpoe' ? 'bg-[#00824F] text-white font-bold shadow-md animate-pulse' : 'text-slate-650 hover:text-slate-900 hover:bg-slate-200/50'
-                    }`}
-                  >
-                    <Monitor className="w-3.5 h-3.5" />
-                    開立醫囑（可開藥物）
-                  </button>
-                  <button
                     onClick={() => setActiveTab('labs')}
                     className={`px-3 py-1.5 rounded-md transition-all flex items-center gap-1.5 cursor-pointer font-sans text-[11px] ${
                       activeTab === 'labs' ? 'bg-[#00824F] text-white font-bold shadow-md' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
@@ -1852,16 +1653,9 @@ export default function App() {
                 <div className="bg-amber-50 border border-amber-200 rounded-lg p-3.5 text-xs flex items-center justify-between text-amber-900 shadow-sm animate-fade-in relative pr-10">
                   <div className="flex items-center gap-2.5">
                     <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
-                    <span>提示：學生此時有 <span className="font-bold underline text-amber-900">{activePatient.clinicalOrders.filter(o => o.status === 'PENDING').length} 項</span> 醫囑正在遠端化驗中，倒數完畢後可隨時到「LIS 抽血檢驗」和「PACS 影像調閱」分頁中查看。</span>
+                    <span>提示：學生此時有 <span className="font-bold underline text-amber-900">{activePatient.clinicalOrders.filter(o => o.status === 'PENDING').length} 項</span> 檢查正在遠端化驗中，倒數完畢後可隨時到「檢驗檢視」和「影像檢查結果」分頁中查看。</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setActiveTab('cpoe')}
-                      className="text-[10px] bg-amber-100 hover:bg-amber-200 text-amber-900 hover:underline px-2.5 py-1 rounded border border-amber-300 transition-colors cursor-pointer font-bold animate-pulse"
-                    >
-                      前往開單台
-                    </button>
                     <button
                       type="button"
                       onClick={() => setDismissedWarnings(prev => ({ ...prev, [activePatient.id]: true }))}
@@ -1911,15 +1705,6 @@ export default function App() {
                   <LabResultsSection
                     patient={activePatient}
                     clinicalTime={clinicalTime}
-                  />
-                )}
-
-                {activeTab === 'cpoe' && (
-                  <CPOEOrderPractice
-                    patient={activePatient}
-                    onPlaceOrder={handlePlaceOrder}
-                    onFastForwardOrder={handleFastForwardOrder}
-                    onCancelOrder={handleCancelOrder}
                   />
                 )}
 
@@ -2058,48 +1843,6 @@ export default function App() {
         );
       })()}
 
-      {/* Blood Draw Order Submitted Popup Alert Modal */}
-      {showBloodDrawAlertModal && (
-        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-[2px] flex items-center justify-center z-[10000] animate-fade-in" id="blood-draw-alert-modal">
-          <div className="bg-white rounded-xl shadow-2xl border border-blue-200 max-w-md w-full mx-4 overflow-hidden transform transition-all duration-200">
-            {/* Modal Header */}
-            <div className="bg-[#00824F] p-4 text-white flex items-center gap-2.5">
-              <div className="bg-white/20 p-1.5 rounded-lg">
-                <BellRing className="w-5 h-5 text-white animate-bounce" />
-              </div>
-              <div>
-                <h3 className="font-bold text-xs tracking-wide">📢 檢驗醫囑傳送通知</h3>
-                <p className="text-[9px] text-emerald-100 uppercase font-mono">Taiwan General Hospital Laboratory</p>
-              </div>
-            </div>
-
-            {/* Modal Body */}
-            <div className="p-5 space-y-3">
-              <div className="text-xs text-slate-700 leading-relaxed font-sans space-y-2">
-                <p className="font-bold text-[#00824F] text-sm">🧪 抽血檢驗醫囑送出成功！</p>
-                <p>
-                  您已成功開立並傳送抽血檢驗項目。
-                </p>
-                <p className="bg-amber-50 border border-amber-200 text-amber-900 p-3 rounded-lg font-medium text-[11px] leading-relaxed">
-                  💡 配合臨床急救與檢驗分析流程，此項目之檢驗結果（含常規血球 CBC、白血球分類 DC、核心生化 BIO、動脈血氣 ABG）將會需要<strong>完整倒數計時 9 分鐘</strong>進行實驗室精密分析，完成後自動呈現結果。在此期間不支援快速出來，請耐心等候！
-                </p>
-              </div>
-            </div>
-
-            {/* Modal Footer */}
-            <div className="bg-slate-50 px-4 py-3 border-t border-slate-150 flex justify-end">
-              <button
-                type="button"
-                onClick={() => setShowBloodDrawAlertModal(false)}
-                className="bg-[#00824F] hover:bg-[#007043] text-white text-[11px] font-bold px-4 py-2 rounded-lg shadow-xs transition-colors cursor-pointer"
-              >
-                我知道了
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {/* Simulation Exam Activity Log Export Modal */}
       {showLogModal && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-[2px] flex items-center justify-center z-[9999] animate-fade-in" id="activity-log-modal">
@@ -2161,7 +1904,7 @@ export default function App() {
                 <div className="divide-y divide-slate-100 max-h-64 overflow-y-auto font-mono text-xs">
                   {examLog.length === 0 ? (
                     <div className="p-6 text-center text-slate-400 italic font-sans">
-                      目前尚無任何操作記錄。請啟動計時器並進行病歷查閱或醫囑開立。
+                      目前尚無任何操作記錄。請啟動計時器並進行病歷查閱或報告檢視。
                     </div>
                   ) : (
                     examLog.map((log) => (

@@ -76,7 +76,7 @@ export const LabResultsSection: React.FC<LabResultsSectionProps> = ({ patient, c
           <div className="space-y-1.5 max-w-md">
             <p className="font-bold text-slate-700">目前本病案尚無任何化驗報告 (LIS Archive Empty)</p>
             <p className="text-[11px] text-slate-500 leading-relaxed font-sans">
-              請到<strong>「開立醫囑（可開藥物）」</strong>分頁中進行抽血檢體派發。檢驗室收單後，化驗儀器將依設定時長倒數，倒數完畢後報告將立即由系統連線在此呈現。
+              目前本病案尚無可調閱之抽血檢驗或化驗數據。若有新檢驗項目完成，將自動連線在此呈現。
             </p>
           </div>
         </div>

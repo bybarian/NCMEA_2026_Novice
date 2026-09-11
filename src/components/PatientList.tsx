@@ -163,7 +163,7 @@ export const PatientList: React.FC<PatientListProps> = ({
       <div className="p-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/50">
         <div className="flex items-center gap-2">
           <HeartPulse className="text-red-500 w-5 h-5" />
-          <h2 className="font-bold text-sm tracking-tight text-slate-800 font-sans">住院病人名冊 (CPOE)</h2>
+          <h2 className="font-bold text-sm tracking-tight text-slate-800 font-sans">住院病人名冊</h2>
         </div>
       </div>
 
