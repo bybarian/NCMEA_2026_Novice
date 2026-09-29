@@ -58,6 +58,19 @@ export async function seedDefaultPatientsIfEmpty() {
       await batch.commit();
       console.log('Firestore patients database successfully seeded!');
     } else {
+      // Clean up any legacy or deleted patients from Firestore
+      snapshot.docs.forEach(async (docSnap) => {
+        const data = docSnap.data();
+        if (['pat-1', 'pat-2', 'pat-3', 'pat-4'].includes(docSnap.id) || data?.name === '高伶') {
+          try {
+            await deleteDoc(docSnap.ref);
+            console.log(`Removed deleted patient ${docSnap.id} from Firestore`);
+          } catch (err) {
+            console.warn('Error deleting legacy patient:', err);
+          }
+        }
+      });
+
       const existingIds = new Set(snapshot.docs.map(doc => doc.id));
       const missingPresets = PRESET_PATIENTS.filter(p => !existingIds.has(p.id));
       if (missingPresets.length > 0) {

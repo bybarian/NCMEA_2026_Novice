@@ -72,7 +72,7 @@ export default function App() {
         const parsed: Patient[] = JSON.parse(dataToUse);
         
         // Filter out legacy removed preset patients
-        const cleaned = parsed.filter(p => !['pat-1', 'pat-2', 'pat-3'].includes(p.id));
+        const cleaned = parsed.filter(p => !['pat-1', 'pat-2', 'pat-3', 'pat-4'].includes(p.id) && p.name !== '高伶');
         
         // Build merged list: start with cleaned entities
         const mergedList = [...cleaned];
@@ -84,6 +84,18 @@ export default function App() {
             mergedList.push(preset);
           }
         });
+
+        // Save cleaned list back to local storage
+        try {
+          localStorage.setItem('vhis_patients_data', JSON.stringify(mergedList));
+          if (defaultSaved) {
+            const parsedDefault: Patient[] = JSON.parse(defaultSaved);
+            const cleanedDefault = parsedDefault.filter(p => !['pat-1', 'pat-2', 'pat-3', 'pat-4'].includes(p.id) && p.name !== '高伶');
+            localStorage.setItem('vhis_default_patients_data', JSON.stringify(cleanedDefault));
+          }
+        } catch {
+          // ignore
+        }
 
         return mergedList.map(patient => {
           const presetMatch = PRESET_PATIENTS.find(p => p.id === patient.id);
@@ -157,8 +169,19 @@ export default function App() {
   const lastSyncedPatientsRef = React.useRef<Record<string, string>>({});
 
   const [activePatientId, setActivePatientId] = useState<string | null>(() => {
-    return patients.length > 0 ? patients[0].id : null;
+    const haoren = patients.find(p => p.id === 'pat-haoren-appendicitis') || patients[0];
+    return haoren ? haoren.id : null;
   });
+
+  // Guard active patient: auto switch to Hao Ren if active is pat-4 or not found
+  useEffect(() => {
+    if (activePatientId === 'pat-4' || (activePatientId && !patients.some(p => p.id === activePatientId))) {
+      const haoren = patients.find(p => p.id === 'pat-haoren-appendicitis') || patients[0];
+      if (haoren) {
+        setActivePatientId(haoren.id);
+      }
+    }
+  }, [patients, activePatientId]);
 
   // Active workspace tab
   const [activeTab, setActiveTab] = useState<'emr' | 'summary' | 'radiology' | 'labs' | 'ecg' | 'ultrasound' | 'rxHistory'>('emr');
@@ -357,7 +380,7 @@ export default function App() {
       if (savedOverride) {
         setClinicalTime(savedOverride);
       } else {
-        const defaultTime = activePatientForClock.customLabReportDate || (activePatientForClock.id === 'pat-4' ? '2026-10-03 09:20' : '2026-06-14 09:00');
+        const defaultTime = activePatientForClock.customLabReportDate || '2026-10-03 10:20';
         setClinicalTime(defaultTime);
       }
     }
@@ -405,12 +428,12 @@ export default function App() {
       
       // Subscribe to real-time database changes
       unsubscribe = subscribeToPatients((firestorePatients) => {
-        // Filter out legacy removed preset patients ('pat-1', 'pat-2', 'pat-3')
-        const cleanedFirestorePatients = firestorePatients.filter(p => !['pat-1', 'pat-2', 'pat-3'].includes(p.id));
+        // Filter out legacy removed preset patients ('pat-1', 'pat-2', 'pat-3', 'pat-4', or '高伶')
+        const cleanedFirestorePatients = firestorePatients.filter(p => !['pat-1', 'pat-2', 'pat-3', 'pat-4'].includes(p.id) && p.name !== '高伶');
         
         // Delete legacy patients from Firestore database
         firestorePatients.forEach((p) => {
-          if (['pat-1', 'pat-2', 'pat-3'].includes(p.id)) {
+          if (['pat-1', 'pat-2', 'pat-3', 'pat-4'].includes(p.id) || p.name === '高伶') {
             deletePatientFromFirestore(p.id);
           }
         });
@@ -710,10 +733,7 @@ export default function App() {
             const updatedImaging = p.imagingStudies.map(study => {
               const targetSeconds = (study.publishMinutesRemaining || 0) * 60;
               const isTimerTrigger = (study.publishMode === 'timer' || study.publishMode === 'scheduled') && study.publishMinutesRemaining !== undefined && nextVal === targetSeconds;
-              // Legacy support: for Kao-Ling's CXR2, if it doesn't have publishMode set but is id 'img-4-2-cxr2', trigger at 540s
-              const isLegacyCxr2Trigger = p.id === 'pat-4' && study.id === 'img-4-2-cxr2' && nextVal === 540;
-
-              if ((isTimerTrigger || isLegacyCxr2Trigger) && !study.visible) {
+              if (isTimerTrigger && !study.visible) {
                 changed = true;
                 revealedImaging.push(`${p.name}的「${study.title}」影像`);
                 return { 
@@ -1397,9 +1417,11 @@ export default function App() {
     if (savedDefault) {
       try {
         const parsed: Patient[] = JSON.parse(savedDefault);
-        setPatients(parsed);
-        localStorage.setItem('vhis_patients_data', JSON.stringify(parsed));
-        parsed.forEach(p => savePatientToFirestore(p));
+        const cleaned = parsed.filter(p => !['pat-1', 'pat-2', 'pat-3', 'pat-4'].includes(p.id) && p.name !== '高伶');
+        setPatients(cleaned);
+        localStorage.setItem('vhis_patients_data', JSON.stringify(cleaned));
+        localStorage.setItem('vhis_default_patients_data', JSON.stringify(cleaned));
+        cleaned.forEach(p => savePatientToFirestore(p));
         setToasts(prev => [...prev, {
           id: `toast-reset-default-${Date.now()}`,
           message: '🔄 已成功將系統重置還原為使用者設定的【預設模式】！',
